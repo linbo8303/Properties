@@ -14,7 +14,9 @@ class PropertyDetailViewController: UIViewController {
     
     // MARK: - Model
     var property: Property? {
-        didSet { updateUI() }
+        didSet {
+            updateUI()
+        }
     }
     
     private func updateUI() {

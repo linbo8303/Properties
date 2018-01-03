@@ -15,7 +15,9 @@ public struct Owner {
     public let lastName: String
     public let avatarMediumURL: URL?
     
-    public var fullName: String { return "\(firstName) \(lastName)" }
+    public var fullName: String {
+        return "\(firstName) \(lastName)"
+    }
     
     // MARK: - Internal Implementation
     

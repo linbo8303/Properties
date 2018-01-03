@@ -12,8 +12,7 @@ import Alamofire
 // Simple Property query class
 // Create an instance of it using one of the initializers
 // Set the path to fetch properties
-public class PropertyRequest
-{
+public class PropertyRequest {
     public let path: String
     
     // designated initializer
@@ -29,7 +28,6 @@ public class PropertyRequest
         request.httpMethod = "GET"
         
         Alamofire.request(path).responseJSON { response in
-            
             if let json = response.result.value {
                 var properties = [Property]()
                 var propertyArray: NSArray?
@@ -53,7 +51,6 @@ public class PropertyRequest
     }
     
     // keys in Twitter responses/queries
-    
     struct PropertyDataKey {
         static let data = "data"
     }

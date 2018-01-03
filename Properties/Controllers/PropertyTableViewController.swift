@@ -10,6 +10,14 @@ import UIKit
 
 class PropertyTableViewController: UITableViewController, UISplitViewControllerDelegate {
 
+    private let path = "http://demo0065087.mockable.io/test/properties"
+
+    private struct Constants {
+        static let CellIdentifier = "PropertyCell"
+        static let PremiumCellIdentifier = "PremiumPropertyCell"
+        static let SegueShowPropertyDetail = "show property detail"
+    }
+    
     // for the UISplitViewControllerDelegate method below to work
     // we have to set ourself as the UISplitViewController's delegate
     override func awakeFromNib() {
@@ -33,15 +41,12 @@ class PropertyTableViewController: UITableViewController, UISplitViewControllerD
     }
     
     // MARK: - Model
-    var properties = [Property]() { didSet { tableView.reloadData() } }
-    
-    private struct Constants {
-        static let CellIdentifier = "PropertyCell"
-        static let PremiumCellIdentifier = "PremiumPropertyCell"
-        static let SegueShowPropertyDetail = "show property detail"
+    var properties = [Property]() {
+        didSet {
+            tableView.reloadData()
+        }
     }
     
-    private let path = "http://demo0065087.mockable.io/test/properties"
     // fetch properties data remotely and set to Model
     private func fetchProperties(with path: String) {
         let propertyRequest = PropertyRequest(path)
@@ -115,7 +120,6 @@ class PropertyTableViewController: UITableViewController, UISplitViewControllerD
             destinationVC.title = cell.property?.title
         }
     }
-
 }
 
 extension UIViewController {

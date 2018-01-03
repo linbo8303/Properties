@@ -34,7 +34,9 @@ public struct Location {
         self.postcode = postcode
     }
     
-    public var address: String { return "\(address1) \(address2) \(suburb), \(postcode)"}
+    public var address: String {
+        return "\(address1) \(address2) \(suburb), \(postcode)"
+    }
     
     struct LocationKey {
         static let address1 = "address_1"

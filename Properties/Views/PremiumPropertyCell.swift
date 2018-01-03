@@ -10,6 +10,10 @@ import UIKit
 
 class PremiumPropertyCell: PropertyCell {
 
-    @IBOutlet weak var premiumImageView: UIImageView! { didSet { premiumImageView?.tintColor = #colorLiteral(red: 0.8509803922, green: 0.3254901961, blue: 0.3098039216, alpha: 1) } }
+    @IBOutlet weak var premiumImageView: UIImageView! {
+        didSet {
+            premiumImageView?.tintColor = #colorLiteral(red: 0.8509803922, green: 0.3254901961, blue: 0.3098039216, alpha: 1)
+        }
+    }
     
 }
