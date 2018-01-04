@@ -26,7 +26,8 @@ iOS 10.0 or later
 - Three models to hold properties data and displayed in table view
 
 - Memory issue with loading big size images via SDWebImage, fixed by following solution:
+```
       SDImageCache.shared().config.shouldDecompressImages = false
       SDWebImageDownloader.shared().shouldDecompressImages = false
-
+```
 
