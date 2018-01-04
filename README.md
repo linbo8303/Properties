@@ -21,6 +21,8 @@ iOS 10.0 or later
  
 ### Introduction
 
+- run `pod install` before launch the project
+
 - Three models to hold properties data and displayed in table view
 
 - Memory issue with loading big size images via SDWebImage, fixed by following solution:
