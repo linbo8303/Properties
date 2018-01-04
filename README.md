@@ -25,6 +25,8 @@ iOS 10.0 or later
 
 - Three models to hold properties data and displayed in table view
 
+- Objc code `NSDictionary+KeyPathConvenience.h` is FYI, not used in the project
+
 - Memory issue with loading big size images via SDWebImage, fixed by following solution:
 ```
       SDImageCache.shared().config.shouldDecompressImages = false
