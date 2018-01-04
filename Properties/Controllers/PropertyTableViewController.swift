@@ -7,8 +7,10 @@
 //
 
 import UIKit
+import DZNEmptyDataSet
+import SVProgressHUD
 
-class PropertyTableViewController: UITableViewController, UISplitViewControllerDelegate {
+class PropertyTableViewController: UITableViewController, UISplitViewControllerDelegate, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate {
 
     private let path = "http://demo0065087.mockable.io/test/properties"
 
@@ -50,8 +52,17 @@ class PropertyTableViewController: UITableViewController, UISplitViewControllerD
     // fetch properties data remotely and set to Model
     private func fetchProperties(with path: String) {
         let propertyRequest = PropertyRequest(path)
-        propertyRequest.fetchProperties(handler: { [weak self] (properties) in
-            self?.properties = properties
+        SVProgressHUD.show(withStatus: "LOADING...")
+        propertyRequest.fetchProperties(handler: { [weak self] (properties, error) in
+            if error != nil {
+                SVProgressHUD.showError(withStatus: "Fetch Data Failed")
+                print(error.debugDescription)
+            } else {
+                SVProgressHUD.showSuccess(withStatus: "Fetch Data Successed")
+                self?.properties = properties
+            }
+            self?.hasPropertyDataBeenFetched = true
+            SVProgressHUD.dismiss(withDelay: 1)
         })
     }
     
@@ -75,10 +86,37 @@ class PropertyTableViewController: UITableViewController, UISplitViewControllerD
         tableView.register(UINib(nibName: Constants.PremiumCellIdentifier, bundle: nil),
                            forCellReuseIdentifier: Constants.PremiumCellIdentifier)
         
+        tableView.emptyDataSetSource = self
+        tableView.emptyDataSetDelegate = self
+        
+        hasPropertyDataBeenFetched = false
         fetchProperties(with: path)
     }
 
+    // MARK: - DZNEmptyDataSetSource
+    private var hasPropertyDataBeenFetched = false
+    
+    func title(forEmptyDataSet scrollView: UIScrollView!) -> NSAttributedString! {
+        let text = "No Property Data Available"
+        let attributes = [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 18),
+                          NSAttributedStringKey.foregroundColor: UIColor.darkGray]
+        return NSAttributedString(string: text, attributes: attributes)
+    }
+    
+    func buttonTitle(forEmptyDataSet scrollView: UIScrollView!, for state: UIControlState) -> NSAttributedString! {
+        let attributes = [NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 18)]
+        return NSAttributedString(string: "Retry", attributes: attributes)
+    }
 
+    // MARK: - DZNEmptyDataSetDelegate
+    func emptyDataSetShouldDisplay(_ scrollView: UIScrollView!) -> Bool {
+        return hasPropertyDataBeenFetched
+    }
+    
+    func emptyDataSet(_ scrollView: UIScrollView!, didTap button: UIButton!) {
+        fetchProperties(with: path)
+    }
+    
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -94,8 +132,14 @@ class PropertyTableViewController: UITableViewController, UISplitViewControllerD
         let cell = tableView.dequeueReusableCell(withIdentifier: property.isPremium ? Constants.PremiumCellIdentifier : Constants.CellIdentifier, for: indexPath)
 
         // Configure the cell...
-        if let propertyCell = cell as? PropertyCell {
-            propertyCell.property = property
+        if property.isPremium {
+            if let premiumPropertyCell = cell as? PremiumPropertyCell {
+                premiumPropertyCell.property = property
+            }
+        } else {
+            if let propertyCell = cell as? PropertyCell {
+                propertyCell.property = property
+            }
         }
 
         return cell

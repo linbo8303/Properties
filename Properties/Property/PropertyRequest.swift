@@ -23,13 +23,15 @@ public class PropertyRequest {
     // send the request specified by our path off to Property
     // calls the handler (not necessarily on the main queue)
     //   with the JSON results converted to a Property List
-    public func fetchProperties(handler: @escaping ([Property]) -> Void) {
+    public func fetchProperties(handler: @escaping (_ elements: [Property], _ error: Error?) -> Void) {
         var request = URLRequest(url: try! path.asURL())
         request.httpMethod = "GET"
         
         Alamofire.request(path).responseJSON { response in
-            if let json = response.result.value {
-                var properties = [Property]()
+            var properties = [Property]()
+            if response.error != nil {
+                handler(properties, response.error)
+            } else if let json = response.result.value {
                 var propertyArray: NSArray?
                 if let dictionary = json as? NSDictionary {
                     if let array = dictionary.value(forKey: PropertyDataKey.data) as? NSArray {
@@ -45,7 +47,7 @@ public class PropertyRequest {
                         }
                     }
                 }
-                handler(properties)
+                handler(properties, response.error)
             }
         }
     }
